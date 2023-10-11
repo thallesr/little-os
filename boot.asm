@@ -4,13 +4,26 @@ BITS 16
 ;16 bits mode
 
 start:
-	mov ah, 0eh
-	mov al, 'A'
-	mov bx, 0
-	int 0x10
-
+	mov si, message
+	call print
 	jmp $
-; jump to the same line
+print:
+	mov bx, 0
+.loop:
+	lodsb
+;load what si is pointing to al register
+	cmp al, 0
+	je .done
+	call print_char
+	jmp .loop
+.done
+	ret
+
+print_char:
+	mov ah, 0eh
+	int 0x10
+	ret
+message: db 'Hello World!', 0
 
 times 510- ($ - $$) db 0
 ; filling 510 bytes of data at least
