@@ -1,5 +1,7 @@
 ORG 0x7c00
+;origin on this address
 BITS 16
+;16 bits mode
 
 start:
 	mov ah, 0eh
