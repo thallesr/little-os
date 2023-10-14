@@ -1,9 +1,18 @@
-ORG 0x7c00
+ORG 0
 ;origin on this address
 BITS 16
 ;16 bits mode
 
 start:
+	cli ; clear interrupts
+	; taking control of initializing those
+	mov ax, 0x7c0
+	mov ds, ax
+	mov es, ax
+	mov ax, 0x00
+	mov ss, ax
+	mov sp, 0x7c00
+	sti ; enables interrupts
 	mov si, message
 	call print
 	jmp $
@@ -16,7 +25,7 @@ print:
 	je .done
 	call print_char
 	jmp .loop
-.done
+.done:
 	ret
 
 print_char:
