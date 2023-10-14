@@ -3,6 +3,8 @@ ORG 0
 BITS 16
 ;16 bits mode
 
+jmp 0x7c0:start
+
 start:
 	cli ; clear interrupts
 	; taking control of initializing those
