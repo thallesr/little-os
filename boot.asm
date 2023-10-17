@@ -2,10 +2,27 @@ ORG 0
 ;origin on this address
 BITS 16
 ;16 bits mode
-
-jmp 0x7c0:start
-
+_start:
+	jmp short start
+	nop
+times 33 db 0
+;Bios parameter block filling, avoid issues with bios overwriting those
 start:
+	jmp 0x7c0:nextstep
+handle_zero:
+	mov ah, 0eh
+	mov al, 'A'
+	mov bx, 0x00
+	int 0x10
+	iret
+handle_one:
+	mov ah, 0eh
+	mov al, 'B'
+	mov bx, 0x00
+	int 0x10
+	iret
+
+nextstep:
 	cli ; clear interrupts
 	; taking control of initializing those
 	mov ax, 0x7c0
@@ -15,6 +32,18 @@ start:
 	mov ss, ax
 	mov sp, 0x7c00
 	sti ; enables interrupts
+
+	;force using ss as segment
+	;default is using ax
+	mov word[ss:0x00], handle_zero
+	mov word[ss:0x02], 0x7c0
+
+	mov word[ss:0x04], handle_one
+	mov word[ss:0x06], 0x7c0
+	int 0; define interupt 0 , called also when we divide by 0
+	mov ax,0
+	div ax
+	int 1
 	mov si, message
 	call print
 	jmp $
