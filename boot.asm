@@ -9,18 +9,6 @@ times 33 db 0
 ;Bios parameter block filling, avoid issues with bios overwriting those
 start:
 	jmp 0x7c0:nextstep
-handle_zero:
-	mov ah, 0eh
-	mov al, 'A'
-	mov bx, 0x00
-	int 0x10
-	iret
-handle_one:
-	mov ah, 0eh
-	mov al, 'B'
-	mov bx, 0x00
-	int 0x10
-	iret
 
 nextstep:
 	cli ; clear interrupts
@@ -32,21 +20,27 @@ nextstep:
 	mov ss, ax
 	mov sp, 0x7c00
 	sti ; enables interrupts
-
-	;force using ss as segment
-	;default is using ax
-	mov word[ss:0x00], handle_zero
-	mov word[ss:0x02], 0x7c0
-
-	mov word[ss:0x04], handle_one
-	mov word[ss:0x06], 0x7c0
-	int 0; define interupt 0 , called also when we divide by 0
-	mov ax,0
-	div ax
-	int 1
-	mov si, message
+	
+	mov ah, 2 ;read sector command
+	mov al, 1 ; one sector to read
+	mov ch, 0; cylinder low eight bits
+	mov cl, 2; read sector two
+	mov dh, 0; head number 
+	;dl is already set by bios for the current disk
+	mov bx, buffer
+	int 0x13
+	jc error
+	
+	mov si, buffer
 	call print
+
+	
 	jmp $
+	
+error:
+	mov si, error_message
+	call print
+	jmp $	
 print:
 	mov bx, 0
 .loop:
@@ -63,9 +57,9 @@ print_char:
 	mov ah, 0eh
 	int 0x10
 	ret
-message: db 'Hello World!', 0
-
+error_message: db 'Failed to load sector'
 times 510- ($ - $$) db 0
 ; filling 510 bytes of data at least
 dw 0xAA55
 ; little endian 55AA on the last 2 bytes of the 512 boot sector
+buffer: ; anything here will not be loaded , out of the 512 bytes, but can be referenced
