@@ -1,9 +1,12 @@
-ORG 0
+ORG 0x7c00
 ;origin on this address
 BITS 16
 ;16 bits mode
+
+CODE_SEG equ gdt_code - gdt_start
+DATA_SEG equ gdt_data - gdt_start
 _start:
-	jmp short start
+	jmp 0:start
 	nop
 times 33 db 0
 ;Bios parameter block filling, avoid issues with bios overwriting those
@@ -13,7 +16,7 @@ start:
 nextstep:
 	cli ; clear interrupts
 	; taking control of initializing those
-	mov ax, 0x7c0
+	mov ax, 0x00
 	mov ds, ax
 	mov es, ax
 	mov ax, 0x00
@@ -21,43 +24,44 @@ nextstep:
 	mov sp, 0x7c00
 	sti ; enables interrupts
 	
-	mov ah, 2 ;read sector command
-	mov al, 1 ; one sector to read
-	mov ch, 0; cylinder low eight bits
-	mov cl, 2; read sector two
-	mov dh, 0; head number 
-	;dl is already set by bios for the current disk
-	mov bx, buffer
-	int 0x13
-	jc error
-	
-	mov si, buffer
-	call print
-
-	
 	jmp $
+.load_protected:
+	cli
+	lgdt[gdt_descriptor]
+	mov eax, cr0
+	or eax, 0x1
+	mov cr0, eax
+	jmp CODE_SEG:load32
 	
-error:
-	mov si, error_message
-	call print
-	jmp $	
-print:
-	mov bx, 0
-.loop:
-	lodsb
-;load what si is pointing to al register
-	cmp al, 0
-	je .done
-	call print_char
-	jmp .loop
-.done:
-	ret
+gdt_start:
+gdt_null:
+	dd 0x0
+	dd 0x0
+;offset 0x8
+gdt_code:		; CS should point to this 
+	dw 0xffff    	; Segment limit first 0-15 bits
+	dw 0		; base first 0-15 bit
+	db 0		; base 16-24 bits
+	db 0x9a		;
+	db 11001111b	; hight 4 bit flags and the low 4 bit flags
+	db 0		; base 24-31 bits
+;offset 0x10
+gdt_data: 		; DS, SS , ES, FS, GS
+	dw 0xffff       ; Segment limit first 0-15 bits
+        dw 0            ; base first 0-15 bit
+        db 0            ; base 16-24 bits
+        db 0x92         ;
+        db 11001111b    ; hight 4 bit flags and the low 4 bit flags
+        db 0            ; base 24-31 bits
+	
+gdt_end:
+gdt_descriptor:
+	dw gdt_end - gdt_start -1;
+	dd gdt_start
 
-print_char:
-	mov ah, 0eh
-	int 0x10
-	ret
-error_message: db 'Failed to load sector'
+[BITS 32]
+load32:
+	jmp $
 times 510- ($ - $$) db 0
 ; filling 510 bytes of data at least
 dw 0xAA55
