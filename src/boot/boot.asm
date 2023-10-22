@@ -61,6 +61,21 @@ gdt_descriptor:
 
 [BITS 32]
 load32:
+	mov ax, DATA_SEG
+	mov ds, ax
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
+	mov ss, ax
+	mov ebp, 0x00200000
+	mov esp, ebp
+	
+	in al,0x92
+	; read cpu bus
+	or al,2
+	; set bits
+	out 0x92, al
+	;write to cpu bus?
 	jmp $
 times 510- ($ - $$) db 0
 ; filling 510 bytes of data at least
