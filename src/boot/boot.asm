@@ -6,25 +6,24 @@ BITS 16
 CODE_SEG equ gdt_code - gdt_start
 DATA_SEG equ gdt_data - gdt_start
 _start:
-	jmp 0:start
-	nop
-times 33 db 0
-;Bios parameter block filling, avoid issues with bios overwriting those
-start:
-	jmp 0x7c0:nextstep
+    jmp short start
+    nop
 
-nextstep:
+ times 33 db 0
+ 
+start:
+    jmp 0:step2
+
+step2:
 	cli ; clear interrupts
 	; taking control of initializing those
 	mov ax, 0x00
 	mov ds, ax
 	mov es, ax
-	mov ax, 0x00
 	mov ss, ax
 	mov sp, 0x7c00
 	sti ; enables interrupts
 	
-	jmp $
 .load_protected:
 	cli
 	lgdt[gdt_descriptor]
@@ -61,22 +60,70 @@ gdt_descriptor:
 
 [BITS 32]
 load32:
-	mov ax, DATA_SEG
-	mov ds, ax
-	mov es, ax
-	mov fs, ax
-	mov gs, ax
-	mov ss, ax
-	mov ebp, 0x00200000
-	mov esp, ebp
+	mov eax, 1
+	mov ecx, 100
+	mov edi, 0x0100000
+	call ata_lba_read
+	jmp CODE_SEG:0x0100000
+
+ata_lba_read:
+	mov ebx, eax ; Backup the LBA
+	; send the highest 8 bits of the lba to hard disk controller
+	shr eax, 24
+	or eax, 0xE0 ; select the master drive
+	mov dx, 0x1F6
+	out dx, al
+	; Finished sending the highest 9 bits of the lba
+
+	mov eax, ecx
+	mov dx, 0x1F2
+	out dx, al
+	; Finished sending the total sectors to read	
+
+	; send more bits of the lba
+	mov eax, ebx
+	mov dx, 0x1F3
+	out dx, al
+	; finished sending more bits of the LBA
+
+	; sending more bits of the lba
+	mov dx, 0x1F4
+	mov eax, ebx ; Restore the backup of the LBA
+	shr eax, 8
+	out dx, al
+	; finished sending more bits of the lba
+
+	;send upper 16 bits of the lba
+	mov dx, 0x1F5
+	mov eax, ebx ; restore backup LBA
+	shr eax, 16
+	out dx, al
+	; Finished sending upper 16bits of the LBA
+
+	mov dx, 0x1F7
+	mov al, 0x20
+	out dx, al
+
+	;REad all sectors into memory
+.next_sector:
+	push ecx
+
+.try_again:
+	mov dx, 0x1F7
+	in al, dx
+	test al, 8
+	jz .try_again
+
+; We need to read 256 words at a time
+	mov ecx, 256
+	mov dx, 0x1F0
+	rep insw ; read input work from io port specified in DX to memory location specified in ES:(E)DI
+	pop ecx
+	loop .next_sector
+;end of reading sectors into the memory
+	ret
 	
-	in al,0x92
-	; read cpu bus
-	or al,2
-	; set bits
-	out 0x92, al
-	;write to cpu bus?
-	jmp $
+	
 times 510- ($ - $$) db 0
 ; filling 510 bytes of data at least
 dw 0xAA55
