@@ -1,5 +1,15 @@
 ORG 0x7c00
 ;origin on this address
+
+;The ORG instruction is used to provide a "hint" to the assembler and the linker for the resulting object file.
+; It allows you to specify the base address of the section of the file.
+;When creating "functions" (things that you might CALL), if those are sufficiently distant from where you are calling from,
+; the assembler will need to use an absolute address for the 
+;call rather than an offset from the current instruction. The ORG instruction effectively locks the code in place,
+;making it non-position independent code.
+;In practice, unless you are writing long code blocks, the majority of the JMP and CALL instructions will be SHORT or NEAR,
+;allowing for simple offsets to be used
+
 BITS 16
 ;16 bits mode
 
