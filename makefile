@@ -13,4 +13,5 @@ all: ./bin/boot.bin ./bin/kernel.bin
 ./build/kernel.asm.o: ./src/kernel.asm
 	nasm -f elf -g ./src/kernel.asm -o ./build/kernel.asm.o
 clean:
-	rm -rf ./bin/boot.bin
+	rm bin/kernel.bin  bin/os.bin
+	rm build/kernel.asm.o build/kernelfull.o
