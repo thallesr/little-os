@@ -20,3 +20,4 @@ _start:
         out 0x92, al
         ;write to cpu bus?
         jmp $
+times 512- ($ - $$) db 0
