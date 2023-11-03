@@ -1,10 +1,12 @@
 #include "kernel.h"
 
-
-void kernel_main()
-{
-    terminal_initialize();
-
+size_t  stringSize(char * stringContent){
+    size_t i =0;
+    while (stringContent[i]){
+        i++;
+    }
+    return i;
+    
 }
 
 uint16_t terminal_make_char(char character,char colour){
@@ -23,5 +25,27 @@ void terminal_initialize(){
         }
     }
     
+
+}
+
+void write(char * content, int lineStart, int columnStart){
+
+    uint16_t * video_men = (uint16_t *) INITIAL_VIDEO_MEMORY;
+    for(int i=0;i< stringSize(content);i++){
+        video_men[ lineStart * VGA_WIDTH + columnStart + i] 
+            = terminal_make_char(content[i],15);
+        
+    }
+
+
+
+}
+
+void kernel_main()
+{
+    terminal_initialize();
+    //QEMU allows me to write past what would be the vertical limit 
+    write("Hello world",VGA_HEIGHT,0);
+
 
 }

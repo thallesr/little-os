@@ -2,6 +2,7 @@
 #define KERNEL_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 #define INITIAL_VIDEO_MEMORY 0xB8000 
 #define VGA_WIDTH 80
