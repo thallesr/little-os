@@ -1,4 +1,5 @@
-add-symbol-file ../build/kernerfull.o 0x100000
+add-symbol-file ../build/kernelfull.o 0x100000
 target remote | qemu-system-x86_64 -hda ./os.bin -gdb stdio -S
-break kernel_start
+break kernel_main
+layout asm
 c

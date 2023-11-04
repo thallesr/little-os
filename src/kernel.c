@@ -1,4 +1,5 @@
 #include "kernel.h"
+extern void problem();
 
 size_t  stringSize(char * stringContent){
     size_t i =0;
@@ -21,7 +22,7 @@ void terminal_initialize(){
     for (int y  = 0; y < VGA_HEIGHT; y++)
     {
         for(int x = 0; x < VGA_WIDTH; x++){
-            video_men[y * VGA_WIDTH + x ] = terminal_make_char('A',15);
+            video_men[y * VGA_WIDTH + x ] = terminal_make_char(' ',15);
         }
     }
     
@@ -45,7 +46,11 @@ void kernel_main()
 {
     terminal_initialize();
     //QEMU allows me to write past what would be the vertical limit 
-    write("Hello world",VGA_HEIGHT,0);
+    write("Hello world",VGA_HEIGHT-1,0);
+
+    idt_init();
+    //set interrupt desc table
+    problem();
 
 
 }
