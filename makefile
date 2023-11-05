@@ -31,7 +31,7 @@ all: ./bin/boot.bin ./bin/kernel.bin
 clean:
 	rm bin/kernel.bin  bin/os.bin
 	rm build/kernel.asm.o build/kernelfull.o
-	rm /build/kernel.o
+	rm build/kernel.o
 	rm build/idt/idt.asm.o
 	rm build/idt/idt.o
 	rm build/memory/memory.o
