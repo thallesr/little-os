@@ -19,7 +19,7 @@ struct idt_desc
 struct idtr_desc
 {
     uint16_t limit; // last address of descriptor table
-    uint16_t base; //base address, start of interrupt descript table
+    uint32_t base; //base address, start of interrupt descript table
 } __attribute__((packed)); // apparently blocks from changing order on compiler ?
 
 
