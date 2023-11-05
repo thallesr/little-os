@@ -1,55 +1,88 @@
 #include "kernel.h"
+#include <stddef.h>
+#include <stdint.h>
+#include "idt/idt.h"
+
+uint16_t* video_mem = 0;
+uint16_t terminal_row = 0;
+uint16_t terminal_col = 0;
+
 extern void problem();
 
-size_t  stringSize(char * stringContent){
-    size_t i =0;
-    while (stringContent[i]){
-        i++;
-    }
-    return i;
-    
-}
-
-uint16_t terminal_make_char(char character,char colour){
-    return (colour<< 8) | character;
+uint16_t terminal_make_char(char c, char colour)
+{
+    return (colour << 8) | c;
     //notice the "reverse" order because of endiness;
 }
 
-
-void terminal_initialize(){
-    uint16_t * video_men = (uint16_t *) INITIAL_VIDEO_MEMORY;
-    //notice that making it a vector of a 16 bits makes things easier when addressing
-    for (int y  = 0; y < VGA_HEIGHT; y++)
-    {
-        for(int x = 0; x < VGA_WIDTH; x++){
-            video_men[y * VGA_WIDTH + x ] = terminal_make_char(' ',15);
-        }
-    }
-    
-
+void terminal_putchar(int x, int y, char c, char colour)
+{
+    video_mem[(y * VGA_WIDTH) + x] = terminal_make_char(c, colour);
 }
 
-void write(char * content, int lineStart, int columnStart){
-
-    uint16_t * video_men = (uint16_t *) INITIAL_VIDEO_MEMORY;
-    for(int i=0;i< stringSize(content);i++){
-        video_men[ lineStart * VGA_WIDTH + columnStart + i] 
-            = terminal_make_char(content[i],15);
-        
+void terminal_writechar(char c, char colour)
+{
+    if (c == '\n')
+    {
+        terminal_row += 1;
+        terminal_col = 0;
+        return;
     }
 
+    terminal_putchar(terminal_col, terminal_row, c, colour);
+    terminal_col += 1;
+    if (terminal_col >= VGA_WIDTH)
+    {
+        terminal_col = 0;
+        terminal_row += 1;
+    }
+}
+void terminal_initialize()
+{
+    video_mem = (uint16_t*)(0xB8000);
+    terminal_row = 0;
+    terminal_col = 0;
+    //notice that making it a vector of a 16 bits makes things easier when addressing
+    for (int y = 0; y < VGA_HEIGHT; y++)
+    {
+        for (int x = 0; x < VGA_WIDTH; x++)
+        {
+            terminal_putchar(x, y, ' ', 0);
+        }
+    }   
+}
 
 
+size_t strlen(const char* str)
+{
+    size_t len = 0;
+    while(str[len])
+    {
+        len++;
+    }
+
+    return len;
+}
+
+void print(const char* str)
+{
+    size_t len = strlen(str);
+    for (int i = 0; i < len; i++)
+    {
+        terminal_writechar(str[i], 15);
+    }
 }
 
 void kernel_main()
 {
     terminal_initialize();
-    //QEMU allows me to write past what would be the vertical limit 
-    write("Hello world",VGA_HEIGHT-1,0);
+    print("Hello world!\ntest");
 
+    // Initialize the interrupt descriptor table
     idt_init();
     //set interrupt desc table
+    //print("Hello world2",2,0);
+
     problem();
 
 

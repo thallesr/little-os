@@ -5,6 +5,7 @@
 #define KERNEL_DATA_SELECTOR 0x10
 //defined in kernel.asm
 
-#define PEACH_OS_TOTAL_INTERRUPT 512
+
+#define PEACHOS_TOTAL_INTERRUPTS 512
 
 #endif
