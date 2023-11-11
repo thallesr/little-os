@@ -27,7 +27,7 @@ _start:
         jmp $
 
 problem:
-    mov eax, 0
-    div eax
-
+    ;mov eax, 0
+    ;div eax
+    int 0
 times 512-($ - $$) db 0

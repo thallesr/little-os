@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "idt/idt.h"
+#include "io/io.h"
 
 uint16_t* video_mem = 0;
 uint16_t terminal_row = 0;
@@ -83,7 +84,8 @@ void kernel_main()
     //set interrupt desc table
     //print("Hello world2",2,0);
 
-    problem();
+    //problem();
 
+    outb(0x60, 0xff);
 
 }
