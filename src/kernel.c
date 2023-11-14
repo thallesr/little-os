@@ -9,7 +9,7 @@ uint16_t terminal_row = 0;
 uint16_t terminal_col = 0;
 
 extern void problem();
-
+extern void enable_int();
 uint16_t terminal_make_char(char c, char colour)
 {
     return (colour << 8) | c;
@@ -86,6 +86,6 @@ void kernel_main()
 
     //problem();
 
-    outb(0x60, 0xff);
-
+    //outb(0x60, 0xff);
+    enable_int();
 }
