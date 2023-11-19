@@ -43,7 +43,7 @@ void idt_init()
         idt_set(i,no_interrupt);
     }
     idt_set(0, idt_zero);
-    idt_set(0x21,int21h);
+    idt_set(0x20,int21h);
 
     // Load the interrupt descriptor table
     idt_load(&idtr_descriptor);
@@ -51,4 +51,5 @@ void idt_init()
 void no_interrupt_handler(){
     outb(0x20, 0x20);
     //ack interrupt
+    //for key pressed we still need to read the key pressed
 }
