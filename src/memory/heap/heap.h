@@ -9,7 +9,7 @@
 #define HEAP_BLOCK_TABLE_ENTRY_FREE 0x00
 
 #define HEAP_BLOCK_HAS_NEXT 0b10000000
-#define HEAP_BLOCK_IS_FREE  0b01000000
+#define HEAP_BLOCK_IS_FIRST  0b01000000
 
 
 
@@ -25,8 +25,13 @@ struct heap_table
 struct heap{
     struct heap_table* table;
     void * start_address;
-} heap;
+};
 
 int heap_create( struct  heap* heap, void * headDataPool, void * end, struct heap_table * table);
+
+
+
+void * heap_malloc(struct heap* heap,size_t size);
+void * heap_free ( struct heap* heap, void* ptr);
 
 #endif

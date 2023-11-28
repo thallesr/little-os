@@ -42,8 +42,10 @@ void idt_init()
     for (int i =0; i< PEACHOS_TOTAL_INTERRUPTS; i++){
         idt_set(i,no_interrupt);
     }
-    idt_set(0, idt_zero);
-    idt_set(0x20,int21h);
+   
+    //remove these 2 to test other heap things
+    //idt_set(0, idt_zero);
+    //idt_set(0x20,int21h);
 
     // Load the interrupt descriptor table
     idt_load(&idtr_descriptor);

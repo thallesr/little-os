@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include "idt/idt.h"
 #include "io/io.h"
+#include "memory/heap/kheap.h"
 
 uint16_t* video_mem = 0;
 uint16_t terminal_row = 0;
@@ -77,10 +78,13 @@ void print(const char* str)
 void kernel_main()
 {
     terminal_initialize();
-    print("Hello world!\ntest");
+    print("Hello world!\ntest\n");
+
 
     // Initialize the interrupt descriptor table
     idt_init();
+    //commenting for now to test malloc
+    
     //set interrupt desc table
     //print("Hello world2",2,0);
 
@@ -88,4 +92,14 @@ void kernel_main()
 
     //outb(0x60, 0xff);
     enable_int();
+
+    kheap_init();
+
+
+    void* ptr = kmalloc(50);
+    void* ptr2 = kmalloc(5000);
+    if (ptr || ptr2){
+    //dumb skip warning        
+    }
+    print("success ");
 }
