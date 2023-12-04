@@ -12,16 +12,17 @@ static int heap_validate_table(void * ptr, void * end, struct heap_table* table)
     size_t  total_blocks = table_size / PEACH_OS_HEAP_BLOCK_SIZE;
     if ( table->total != total_blocks){
         res = -EINVARG;
-        goto out;
+//        goto out;
     }
 
-out:
+//out:
     return res;
 }
 static int heap_validate_alignment( void * ptr){
-
+    //start pointer and end pointer should start at a multiple of the block size for cpu aligment reasons
     return ((unsigned int) ptr % PEACH_OS_HEAP_BLOCK_SIZE) ==0;
 }
+//remember that all those pointers are alredy in the right region, heap and heap_table allocated by static allocation
 int heap_create( struct  heap* heap, void * headDataPool, void * end, struct heap_table * table)
 {
     int res= 0;
@@ -43,6 +44,7 @@ int heap_create( struct  heap* heap, void * headDataPool, void * end, struct hea
     size_t table_size = sizeof (HEAP_BLOCK_TABLE_ENTRY) * table->total;
     memset(table->entries, HEAP_BLOCK_TABLE_ENTRY_FREE, table_size);
 
+//using goto and labels to add some common clean code in the future, questionable.
 out:
 
 
@@ -50,12 +52,12 @@ out:
 }
 
 static uint32_t heap_align_value_to_upper(uint32_t val){
-     if (( val % PEACH_OS_HEAP_BLOCK_SIZE) == 0)
-     {
+    if (( val % PEACH_OS_HEAP_BLOCK_SIZE) == 0)
+    {
         return val;
-     }
+    }
 
-     val = (val - (val % PEACH_OS_HEAP_BLOCK_SIZE));
+    val = (val - (val % PEACH_OS_HEAP_BLOCK_SIZE));
     val += PEACH_OS_HEAP_BLOCK_SIZE;
     return val;
 }

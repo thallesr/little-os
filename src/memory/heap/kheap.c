@@ -8,16 +8,20 @@ struct heap_table kernel_heap_table;
 
 
 void kheap_init(){
+    //declared heap and heap table not a pointer, so they are allocated
 
+    //i want N blocks of BLOCK_SIZE
     int total_table_entries = (PEACH_OS_HEAP_SIZE_BYTES) / (PEACH_OS_HEAP_BLOCK_SIZE);
+    //cast to any pointer , there is no special treatment. some region that is empty, only control is the total which we wanted , ch
     kernel_heap_table.entries = (HEAP_BLOCK_TABLE_ENTRY *) (PEACH_OS_HEAP_TABLE_ADDRESS);
+
     kernel_heap_table.total = total_table_entries;
 
     void * end = (void *) (PEACH_OS_HEAP_ADDRESS + PEACH_OS_HEAP_SIZE_BYTES);
 
     int res = heap_create(&kernel_heap, (void *) (PEACH_OS_HEAP_ADDRESS), end , &kernel_heap_table);
     if (res < 0){
-        print("Failed to creat heap\n");
+        print("Failed to create heap\n");
     }
 }
 
