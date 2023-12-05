@@ -28,7 +28,7 @@ void idt_set(int interrupt_no, void* address){
     desc-> offset_1 = (uint32_t) address & 0x0000ffff;
     desc-> selector = KERNEL_CODE_SELECTOR;
     desc-> zero = 0; 
-    desc-> type_attr = 0xEE; // set many bitwiser values, include ring 3 = 0b11
+    desc-> type_attr = 0xEE; // set many bitwise values, include ring 3 = 0b11
     desc-> offset_2 = (uint32_t) address >> 16; 
     //the higher part of the offset
     
