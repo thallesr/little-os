@@ -75,6 +75,7 @@ void print(const char* str)
         terminal_writechar(str[i], 15);
     }
 }
+static struct paging_4g_chunk * kernel_chunk =0;
 
 void kernel_main()
 {
@@ -91,8 +92,7 @@ void kernel_main()
 
     //problem();
 
-    //outb(0x60, 0xff);
-    enable_int();
+    
 
     kheap_init();
 
@@ -107,4 +107,11 @@ void kernel_main()
     //dumb skip warning        
     }
     print("success ");
+
+    //paging
+     kernel_chunk = paging_new_4gb( PAGING_ACCESS_ALL_ACCESS_LEVEL |PAGING_IS_PRESENT | PAGING_IS_WRITABLE);
+     paging_switch( paging_4g_chunk_get_directory(kernel_chunk));
+    enable_paging();
+     //outb(0x60, 0xff);
+    enable_int();
 }
