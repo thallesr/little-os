@@ -17,7 +17,7 @@ struct paging_4g_chunk * paging_new_4gb(uint8_t flags){
         uint32_t * entry = kzalloc(sizeof(uint32_t) * PAGING_TOTAL_ENTRIES_PER_TABLE);
 
         for (int j=0;j<PAGING_TOTAL_ENTRIES_PER_TABLE;j++){
-            entry = (uint32_t *)((offset + PAGING_PAGE_SIZE * j) | flags); //first operand is always bigger or equal 4096(PAGING_SIZE), so we have 12 bits free
+            entry[j] = ((offset + PAGING_PAGE_SIZE * j) | flags); //first operand is always bigger or equal 4096(PAGING_SIZE), so we have 12 bits free
         }
         offset += PAGING_TOTAL_ENTRIES_PER_TABLE * PAGING_PAGE_SIZE;
         directory[i] = (uint32_t)entry | flags | PAGING_IS_WRITABLE;
