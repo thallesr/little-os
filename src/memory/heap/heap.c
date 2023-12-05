@@ -161,4 +161,4 @@ int heap_address_to_block(struct heap* heap, void * address){
 void  heap_free ( struct heap * heap,void* ptr){
     heap_mark_blocks_free(heap, heap_address_to_block(heap,ptr));
     ptr = NULL;
-}
+}   
