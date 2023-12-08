@@ -75,7 +75,7 @@ void print(const char* str)
         terminal_writechar(str[i], 15);
     }
 }
-static struct paging_4g_chunk * kernel_chunk =0;
+static struct Paging_4GB_Chunk * kernel_chunk =0;
 
 void kernel_main()
 {
@@ -111,7 +111,21 @@ void kernel_main()
     //paging
      kernel_chunk = paging_new_4gb( PAGING_ACCESS_ALL_ACCESS_LEVEL |PAGING_IS_PRESENT | PAGING_IS_WRITABLE);
      paging_switch( paging_4g_chunk_get_directory(kernel_chunk));
+   
+   
+    
     enable_paging();
      //outb(0x60, 0xff);
+
+      char * page = kzalloc(4096);
+    paging_set(paging_4g_chunk_get_directory(kernel_chunk),(void *)0x1000, (uint32_t)page | PAGING_ACCESS_ALL_ACCESS_LEVEL| PAGING_IS_PRESENT | PAGING_IS_WRITABLE);
+   
+    char * modifypage = (char *) 0x1000;
+    modifypage[0] = 'A';
+    modifypage[1] = 'B';
+    print(modifypage);
+    print(page);
+
+     
     enable_int();
 }

@@ -12,7 +12,8 @@
 
 //100MB
 #define PEACH_OS_HEAP_SIZE_BYTES (1024 * 1024 * 100)
-//4K
+//4K REMEMBER, changing this value below forces many changes, currently any allocation is 
+//aligned in a page
 #define PEACH_OS_HEAP_BLOCK_SIZE (1024 * 4)
 
 #define PEACH_OS_HEAP_ADDRESS 0x01000000 // start 0x01000000 	end ???????? 	 qntity ???????? (whatever exists) 	RAM -- free for use 	More Extended memory 1
