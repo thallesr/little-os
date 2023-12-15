@@ -5,6 +5,7 @@
 #include "io/io.h"
 #include "memory/heap/kheap.h"
 #include "paging/paging.h"
+#include "disk/disk.h"
 
 uint16_t* video_mem = 0;
 uint16_t terminal_row = 0;
@@ -96,7 +97,7 @@ void kernel_main()
 
     kheap_init();
 
-
+    /* sample allocation test, set the breakpoints in gdb to see
     void* ptr = kmalloc(50);
     void* ptr2 = kmalloc(5000);
     void* ptr3 = kmalloc(4000);
@@ -108,6 +109,8 @@ void kernel_main()
     }
     print("success ");
 
+    */
+
     //paging
      kernel_chunk = paging_new_4gb( PAGING_ACCESS_ALL_ACCESS_LEVEL |PAGING_IS_PRESENT | PAGING_IS_WRITABLE);
      paging_switch( paging_4g_chunk_get_directory(kernel_chunk));
@@ -115,9 +118,14 @@ void kernel_main()
    
     
     enable_paging();
+    char buf[512];
+    disk_read_sector(0,1,buf);
+
      //outb(0x60, 0xff);
 
+    /*
       char * page = kzalloc(4096);
+      //set this recent allocated page to be the one for address 0x1000
     paging_set(paging_4g_chunk_get_directory(kernel_chunk),(void *)0x1000, (uint32_t)page | PAGING_ACCESS_ALL_ACCESS_LEVEL| PAGING_IS_PRESENT | PAGING_IS_WRITABLE);
    
     char * modifypage = (char *) 0x1000;
@@ -125,7 +133,8 @@ void kernel_main()
     modifypage[1] = 'B';
     print(modifypage);
     print(page);
-
+    will print the same content in both, since they are the same real memory address
+    */
      
     enable_int();
 }
