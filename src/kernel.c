@@ -83,9 +83,12 @@ void kernel_main()
     terminal_initialize();
     print("Hello world!\ntest\n");
 
+    kheap_init();
 
     // Initialize the interrupt descriptor table
     idt_init();
+
+
     //commenting for now to test malloc
     
     //set interrupt desc table
@@ -95,7 +98,6 @@ void kernel_main()
 
     
 
-    kheap_init();
 
     /* sample allocation test, set the breakpoints in gdb to see
     void* ptr = kmalloc(50);
@@ -138,3 +140,4 @@ void kernel_main()
      
     enable_int();
 }
+ 
