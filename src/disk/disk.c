@@ -3,7 +3,7 @@ int disk_read_sector(int lba, int totalSectors, void * buffer){
 
     outb(0x1F6,(lba >> 24) | 0xE0);
     outb(0x1F2, totalSectors);
-    outb(0x1F3, (unsigned char)(lba && 0xff));
+    outb(0x1F3, (unsigned char)(lba & 0xff));
     outb(0x1F4, (unsigned char)(lba >> 8));
     outb(0x1F5, (unsigned char)(lba >> 16));
     outb(0x1F7, 0x20);
