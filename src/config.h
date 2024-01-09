@@ -20,4 +20,6 @@
 
 #define PEACH_OS_HEAP_TABLE_ADDRESS 0x00007E00 //from os dev start0x00007E00 	end0x0007FFFF 	480.5 KiB 	Conventional memory,  usable memory , 640 KiB RAM ("Low memory") 
 
+#define PEACH_OS_SECTOR_SIZE 512
+
 #endif
