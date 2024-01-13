@@ -1,6 +1,7 @@
 #include "kernel.h"
 #include <stddef.h>
 #include <stdint.h>
+#include "string/string.h"
 #include "idt/idt.h"
 #include "io/io.h"
 #include "memory/heap/kheap.h"
@@ -57,16 +58,7 @@ void terminal_initialize()
 }
 
 
-size_t strlen(const char* str)
-{
-    size_t len = 0;
-    while(str[len])
-    {
-        len++;
-    }
 
-    return len;
-}
 
 void print(const char* str)
 {
