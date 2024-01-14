@@ -7,7 +7,7 @@
 #include "memory/heap/kheap.h"
 #include "paging/paging.h"
 #include "disk/disk.h"
-
+#include "fs/pparser.h"
 uint16_t* video_mem = 0;
 uint16_t terminal_row = 0;
 uint16_t terminal_col = 0;
@@ -133,5 +133,43 @@ void kernel_main()
     */
      
     enable_int();
+
+    struct path_root*  root_path  = pathparser_parse("0:/bin/shell.exe",NULL);
+    
+    int driveNo=5;
+    const char *  pathPart;
+    if (root_path){
+        driveNo = root_path->drive_no;
+        pathPart = root_path->first->part;
+
+        if (driveNo!=0){
+            print("drive no is not zero");
+        }
+        print("\n");
+        print("/");
+        print("\n");
+        print(pathPart);
+        print("\n");
+        print("/");
+        print("\n");
+
+
+
+        const char * pathPart2 = root_path->first->next->part;
+
+        print(pathPart2);
+        print("\n");
+
+        print("no error");
+
+        
+
+
+    }
+
+    if (driveNo && pathPart){
+
+    }
+
 }
  

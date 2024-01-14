@@ -22,4 +22,7 @@
 
 #define PEACH_OS_SECTOR_SIZE 512
 
+#define PEACH_OS_MAX_PATH 108
+
+
 #endif

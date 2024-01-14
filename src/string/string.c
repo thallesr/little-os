@@ -1,24 +1,27 @@
 #include "string.h"
 
-size_t strlen(const char* str)
+size_t strlen(const char* ptr)
 {
-    size_t len = 0;
-    while(str[len])
+    int i = 0;
+    while(*ptr != 0)
     {
-        len++;
+        i++;
+        ptr += 1;
     }
-
-    return len;
+    return i;
 }
-size_t strnlen(const char* str,int max)
+
+   
+size_t strnlen(const char* ptr, int max)
 {
-    size_t len = 0;
-    while(str[len] && (len < max))
+    int i = 0;
+    for (i = 0; i < max; i++)
     {
-        len++;
+        if (ptr[i] == 0)
+            break;
     }
 
-    return len;
+    return i;
 }
 bool is_digit(char c){
     return c>= 48 && c<=57;
