@@ -8,6 +8,7 @@
 #include "paging/paging.h"
 #include "disk/disk.h"
 #include "fs/pparser.h"
+#include "disk/streamer.h"
 uint16_t* video_mem = 0;
 uint16_t terminal_row = 0;
 uint16_t terminal_col = 0;
@@ -170,6 +171,17 @@ void kernel_main()
     if (driveNo && pathPart){
 
     }
+
+    struct disk_stream * stream = diskstream_new(0);
+    diskstream_seek(stream,0x21c);
+    unsigned char c = 0;
+    diskstream_read(stream,&c,1);
+    while (1)
+    {
+        
+    }
+    
+
 
 }
  
