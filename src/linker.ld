@@ -23,7 +23,7 @@ SECTIONS
 		*(COMMON)
 		*(.bss)
 	}
-		.asm : ALIGN(4096)
+	.asm : ALIGN(4096)
 	{
 		*(.asm)
 	}

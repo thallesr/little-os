@@ -70,9 +70,9 @@ gdt_descriptor:
 
 [BITS 32]
 load32:
-	mov eax, 1
-	mov ecx, 100
-	mov edi, 0x0100000
+	mov eax, 1   ; start from sector 1, 0 is bootloader
+	mov ecx, 100 ; read 100 sec
+	mov edi, 0x0100000 ; put on this address
 	call ata_lba_read
 	jmp CODE_SEG:0x0100000
 

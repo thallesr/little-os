@@ -173,15 +173,14 @@ void kernel_main()
     }
 
     struct disk_stream * stream = diskstream_new(0);
-    diskstream_seek(stream,0x21c);
-    unsigned char c = 0;
-    diskstream_read(stream,&c,1);
+    diskstream_seek(stream,0x400);
+    unsigned char * c = kmalloc(1024);
+    diskstream_read(stream,&c,1024);
+    //now have to concat next 1MB to disk file, then write the FileSystem somehow there
     while (1)
     {
-        
+        print("all right");
     }
-    
-
 
 }
  

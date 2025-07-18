@@ -24,21 +24,17 @@ int diskstream_read(struct disk_stream * stream, void * out, int total){
     char buf[PEACH_OS_SECTOR_SIZE];
 
     int res = disk_read_block(stream-> disk, sector, 1 , buf);
-    if ( res< 0 ){
-        goto out;
-    }
-    int total_to_read = total > PEACH_OS_SECTOR_SIZE ? PEACH_OS_SECTOR_SIZE : total;
-    for (int i=0; i< total_to_read; i++){
-        *(char *) out ++ = buf[offset+i];
-    }
+    if ( res> 0 ){
+        int total_to_read = total > PEACH_OS_SECTOR_SIZE ? PEACH_OS_SECTOR_SIZE : total;
+        for (int i=0; i< total_to_read; i++){
+            *(char *) out ++ = buf[offset+i];
+        }
 
-    stream-> pos += total_to_read;
-    if (total > PEACH_OS_SECTOR_SIZE)
-    {
-        res = diskstream_read(stream, out , total - PEACH_OS_SECTOR_SIZE);
-
+        stream-> pos += total_to_read;
+        if (total > PEACH_OS_SECTOR_SIZE){
+                res = diskstream_read(stream, out , total - PEACH_OS_SECTOR_SIZE);
+        }
     }
-    out:
         return res;
 };
 
