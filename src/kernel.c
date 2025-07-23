@@ -179,7 +179,7 @@ void kernel_main()
     //now have to concat next 1MB to disk file, then write the FileSystem somehow there
     while (1)
     {
-        print("all right");
+       print("");
     }
 
 }
