@@ -135,8 +135,9 @@ void kernel_main()
      
     enable_int();
 
-    struct path_root*  root_path  = pathparser_parse("0:/bin/shell.exe",NULL);
-    
+    struct path_root*  root_path  = pathparser_parse("0:/bin/bla/next/level/one/two/endshell.exe",NULL);
+    struct path_part* part_of_path = NULL;
+
     int driveNo=5;
     const char *  pathPart;
     if (root_path){
@@ -147,11 +148,20 @@ void kernel_main()
             print("drive no is not zero");
         }
         print("\n");
-        print("/");
         print("\n");
-        print(pathPart);
-        print("\n");
+        
+        part_of_path = root_path->first->next;
+        print(part_of_path->part);
         print("/");
+        do{
+           const char * folderOrFile = part_of_path->part;
+           print(folderOrFile);
+           print("/");
+
+           part_of_path = part_of_path -> next;
+        }while (part_of_path);
+        
+        print("\n");
         print("\n");
 
 

@@ -4,7 +4,7 @@
 #include "config.h"
 #include "status.h"
 
-struct disk disk;
+Disk disk;
 int disk_read_sector(int lba, int totalSectors, void * buffer){
 
     outb(0x1F6,(lba >> 24) | 0xE0);
@@ -41,7 +41,7 @@ void disk_search_and_init()
     disk.sector_size = PEACH_OS_SECTOR_SIZE;
 }
 
-struct disk* disk_get(int index)
+Disk* disk_get(int index)
 {
     if (index != 0){
         return 0;
@@ -50,7 +50,7 @@ struct disk* disk_get(int index)
 
 }
 
-int disk_read_block(struct disk * idisk, unsigned int lba, int total, void * buf){
+int disk_read_block(Disk* idisk, unsigned int lba, int total, void * buf){
     if (idisk != &disk)
     {
         return -EIO;
