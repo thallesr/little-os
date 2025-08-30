@@ -5,3 +5,8 @@ target remote | qemu-system-i386 -hda ./os.bin -gdb stdio -S
 break kernel_main
 layout asm
 c
+continue
+step
+info registers
+info variables
+next
