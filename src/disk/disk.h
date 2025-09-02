@@ -9,10 +9,10 @@ struct disk
 {
     PEACH_OS_DISK_TYPE type;
     int sector_size;
+    struct filesystem* filesystem;
 };
-typedef struct disk Disk;
 
-int disk_read_block(Disk * disk, unsigned int lba, int total, void * buf);
+int disk_read_block(struct disk * disk, unsigned int lba, int total, void * buf);
 
 struct disk* disk_get(int index);
 

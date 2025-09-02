@@ -3,8 +3,9 @@
 #include "memory/memory.h"
 #include "config.h"
 #include "status.h"
+#include "fs/file.h"
 
-Disk disk;
+struct disk disk;
 int disk_read_sector(int lba, int totalSectors, void * buffer){
 
     outb(0x1F6,(lba >> 24) | 0xE0);
@@ -39,9 +40,10 @@ void disk_search_and_init()
     memset(&disk, 0, sizeof(disk));
     disk.type = PEACH_OS_DISK_TYPE_REAL;
     disk.sector_size = PEACH_OS_SECTOR_SIZE;
+    disk.filesystem = fs_resolve(&disk);
 }
 
-Disk* disk_get(int index)
+struct disk * disk_get(int index)
 {
     if (index != 0){
         return 0;
@@ -50,7 +52,7 @@ Disk* disk_get(int index)
 
 }
 
-int disk_read_block(Disk* idisk, unsigned int lba, int total, void * buf){
+int disk_read_block(struct disk* idisk, unsigned int lba, int total, void * buf){
     if (idisk != &disk)
     {
         return -EIO;

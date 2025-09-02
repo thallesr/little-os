@@ -1,4 +1,4 @@
-FILES = ./build/kernel.asm.o ./build/kernel.o ./build/idt/idt.asm.o ./build/idt/idt.o ./build/memory/memory.o ./build/io/io.o  ./build/io/io.asm.o ./build/memory/heap.o ./build/memory/kheap.o ./build/paging/paging.o ./build/paging/paging.asm.o ./build/disk/disk.o ./build/fs/pparser.o ./build/string/string.o ./build/disk/streamer.o
+FILES = ./build/kernel.asm.o ./build/kernel.o ./build/idt/idt.asm.o ./build/idt/idt.o ./build/memory/memory.o ./build/io/io.o  ./build/io/io.asm.o ./build/memory/heap.o ./build/memory/kheap.o ./build/paging/paging.o ./build/paging/paging.asm.o ./build/disk/disk.o ./build/fs/pparser.o ./build/string/string.o ./build/disk/streamer.o ./build/fs/file.o
 INCLUDES = -I./src
 FLAGS = -g -ffreestanding -falign-jumps -falign-functions -falign-labels -falign-loops -fstrength-reduce -fomit-frame-pointer -finline-functions -Wno-unused-function -fno-builtin -Werror -Wno-unused-label -Wno-cpp -Wno-unused-parameter -nostdlib -nostartfiles -nodefaultlibs -Wall -O0 -Iinc
 all: ./bin/boot.bin ./bin/kernel.bin
@@ -60,6 +60,9 @@ all: ./bin/boot.bin ./bin/kernel.bin
 ./build/string/string.o: ./src/string/string.c
 	i686-elf-gcc ${INCLUDES} -I./src/string  ${FLAGS} -std=gnu99 -c ./src/string/string.c -o ./build/string/string.o
 
+./build/fs/file.o: ./src/fs/file.c
+	i686-elf-gcc ${INCLUDES} -I./src/file  ${FLAGS} -std=gnu99 -c ./src/fs/file.c -o ./build/fs/file.o
+
 clean:
 
 	rm build/idt/idt.asm.o
@@ -78,6 +81,7 @@ clean:
 	rm build/kernel.asm.o build/kernelfull.o
 	rm build/kernel.o
 	rm build/disk/streamer.o
+	rm build/fs/file.o
 
 
 
