@@ -20,7 +20,7 @@ enum {
     FILE_MODE_INVALID
 };
 
-typedef void* (*FS_OPEN_FUNCTION)(struct disk* disk, struct path_part, FILE_MODE mode);
+typedef void* (*FS_OPEN_FUNCTION)(struct disk* disk, struct path_part *, FILE_MODE mode);
 typedef int ( *FS_RESOLVE_FUNCTION)(struct disk* disk);
 
 
